@@ -14,7 +14,7 @@ PRIMARY KEY(idcat)
 CREATE TABLE tb_evento(
 idevento INT,
 nomevento VARCHAR(100),
-desevento VARCHAR(100),
+desevento VARCHAR(600),
 idcat INT,
 PRIMARY KEY(idevento),
 FOREIGN KEY(idcat) REFERENCES tb_categoria(idcat)
@@ -30,6 +30,7 @@ PRIMARY KEY(idfuncion),
 FOREIGN KEY(idevento) REFERENCES tb_evento(idevento)
 );
 
+
 CREATE TABLE tb_cliente(
 idcli INT auto_increment not null,
 nomcli VARCHAR(50) not null,
@@ -39,32 +40,35 @@ username VARCHAR(30) unique not null,
 clave VARCHAR(30) not null,
 PRIMARY KEY(idcli)
 );
+		select * from tb_evento;
+
+CREATE TABLE tb_area(
+idarea INT auto_increment,
+-- idfuncion int,   creo que se debe borrar esta relacion | si son datos fijos no se considera
+nomarea VARCHAR(30),
+precio dec,
+-- asientos int,
+PRIMARY KEY(idarea)
+-- FOREIGN KEY(idfuncion) REFERENCES tb_funcion(idfuncion)
+);					  
 
 -- en la tabla area de almacena la cantidad de asientos y la tabla ticket
 --  descuenta con las unidades compradas
-/*CREATE TABLE tb_ticket(
-idTicket INT auto_increment,
+CREATE table tb_ticket(
+idticket INT auto_increment,
 idfuncion INT,
-id_area int,
+idarea int,
 idcli int,
 unidades INT,
 total double,
-PRIMARY KEY(idTicket),
+PRIMARY KEY(idticket),
 FOREIGN KEY (idfuncion) REFERENCES tb_funcion(idfuncion),
-FOREIGN KEY (id_area) REFERENCES tb_area(id_area),
+FOREIGN KEY (idarea) REFERENCES tb_area(idarea),
 FOREIGN KEY (idcli) REFERENCES tb_cliente(idcli)
-);*/
-
-/*
-CREATE TABLE tb_area(
-id_area INT auto_increment,
-idfuncion int,
-nom_area VARCHAR(30),
-precio dec,
-asientos int,
-PRIMARY KEY(id_area),
-FOREIGN KEY(idfuncion) REFERENCES tb_funcion(idfuncion)
 );
+
+
+
 
 CREATE TABLE tb_tipo(
 idTipo int primary key,
@@ -72,25 +76,9 @@ descripcion varchar (20)
 );
 insert into tb_tipo values(1, 'administrador');
 insert into tb_tipo values(2, 'cliente');
-*/
 
-/*
-CREATE TABLE tb_detalleTicket(
-idDetalleTicket INT auto_increment,
-idTicket int,
-idcli INT,
-PRIMARY KEY(idticket),
-FOREIGN KEY (idcli) REFERENCES tb_cliente(idcli)
-);
+select * from tb_ticket;
 
-CREATE TABLE tb_asiento(
-id_asiento INT auto_increment,
-id_area INT,
-cantidad INT,
-PRIMARY KEY(id_asiento),
-FOREIGN KEY(id_area) REFERENCES Area(id_area)
-);
-*/
 -- registro tb_cliente
 insert into tb_cliente values(null,'Brayan','Pichiule','87654321','admin@mail.com','admin');
 insert into tb_cliente values(null,'Miguel','Ruiz','87654321','miguelr@mail.com','miguelr');
@@ -111,6 +99,11 @@ insert into tb_evento values(6,'LOS AMANTES DE TERUEL','Leyenda de los amantes d
 insert into tb_evento values(7,'LA DIVINA COMEDIA','Basado en poema de Dante Alighieri',3);
 insert into tb_evento values(8,'GIAN MARCO','Concierto inolvidable con Gian Marco',4);
 
+																					  
+																								
+																							  
+																						 
+
 -- registro tb_funcion
 insert into tb_funcion values(1,1,'2023-12-08','19:00','21:00');
 insert into tb_funcion values(2,2,'2023-12-06','18:00','20:00');
@@ -129,10 +122,20 @@ insert into tb_funcion values(14,6,'2023-12-13','20:00','22:00');
 insert into tb_funcion values(15,7,'2023-12-14','20:00','22:00');
 insert into tb_funcion values(16,8,'2023-12-12','19:00','21:00');
 
+insert into tb_area values	(1,'General',50.00),
+							(2,'VIP',100.00),
+                            (3,'Platinium',150.00);
+
+
 select * from tb_funcion;
 select * from tb_evento;
 select * from tb_cliente;
 
 SELECT f.idfuncion, e.nomevento, f.fecha, f.horainicio, f.horafin
 FROM tb_evento e INNER JOIN
-tb_funcion f ON e.idevento = f.idevento
+tb_funcion f ON e.idevento = f.idevento;
+
+select * from tb_ticket;
+
+
+
