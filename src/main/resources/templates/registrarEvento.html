@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Registro Eventos</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-6 col-sm-4">
+				<h1>Registrar Eventos</h1>
+				<form action="/registrarEvento" method="post" th:object="${evento}">
+
+					<div class="form-group">
+						<label for="inputEven">Evento</label>
+						<input type="text" th:field="*{idevento}" class="form-control" placeholder="Código">
+					</div>
+					<div class="form-group">
+						<label for="inputNom">Nombre</label>
+						<input type="text" th:field="*{nomevento}" class="form-control" id="inputNombre"
+							placeholder="Nombre evento">
+					</div>
+					<div class="form-group">
+						<label for="inputDes">Descripción</label>
+						<input type="text" th:field="*{desevento}" class="form-control" id="inputDescripcion"
+							placeholder="Descripcion">
+					</div>
+					<div class="form-group">
+						<label for="inputCat">Categorias</label>
+						<select th:field="*{idcat}" id="inputCat" class="form-control">
+							<option value="-1">Seleccione...</option>
+							<option th:each="c : ${lstCategorias}" th:value="${c.idcat}" th:text="${c.nomcat}">xx
+							</option>
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary">Registrar</button>
+				</form>
+				<div th:text="${mensaje}"></div>
+			</div>
+
+		</div>
+	</div>
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+
+</html>

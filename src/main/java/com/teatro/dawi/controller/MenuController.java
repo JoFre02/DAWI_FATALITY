@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.teatro.dawi.model.Cliente;
+import com.teatro.dawi.model.Evento;
 import com.teatro.dawi.model.Funcion;
 import com.teatro.dawi.repository.ICategoriaRepository;
 import com.teatro.dawi.repository.IClienteRepository;
@@ -48,14 +49,23 @@ public class MenuController {
 	private ResourceLoader resourceLoader;
 	
 	@GetMapping("/cargarIndex")
-	public String mostrarIndex() {
-		return "index";
+	public String mostrarIndex(Model model) {
+		model.addAttribute("lstEventos", repoEven.findAll());
+		//No olvidar
+		return "chifles";
 	}
 	
 	@GetMapping("/cargarRegUsu")
 	public String cargarRegUsu(Model model) {
 		model.addAttribute("cliente", new Cliente());
 		return "registroUsuario";
+	}
+	
+	@GetMapping("cargarRealizarEvento")
+	public String mostrarRealizarEvento(Model model) {
+		model.addAttribute("lstCategorias", repoCat.findAll());
+		model.addAttribute("evento", new Evento());
+		return "registrarEvento";
 	}
 	
 	@GetMapping("/login")
@@ -89,6 +99,19 @@ public class MenuController {
 		
 		return "redirect:/registroFuncion";
 		
+	}
+	
+	@PostMapping("/registrarEvento")
+	public String registrarEvento(@ModelAttribute Evento evento, Model model) {
+		model.addAttribute("lstCategorias", repoCat.findAll());
+		try {
+			repoEven.save(evento);
+			model.addAttribute("mensaje", "REGISTRO OK");
+		} catch (Exception e) {
+			model.addAttribute("mensaje", "ERROR AL REGISTRAR");
+		}
+		
+		return "redirect:/registroFuncion";
 	}
 	
 	@GetMapping("/editar/{idfuncion}")
