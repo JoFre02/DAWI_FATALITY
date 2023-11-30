@@ -9,31 +9,35 @@
 </head>
 
 <body class="bg-light">
-	<div class="container bg-light">
-		<div class="mb-5">
-			<h1><img src="#">TicketStore</h1>
-		</div>
-		<div class="mb-3">
-			<a href="#">Volver al Inicio</a>
-		</div>
-		<div class="mb-5">
-			<h2>Bienvenidos a<br>TicketStore</h2>
-		</div>
-		<form class="row g-3 w-50" action="/login" method="post">
-			<div class="col-12">
-				<input name="txtUsuario" type="email" class="form-control bg-secondary" id="exampleInputEmail1"
-					placeholder="Ingrese su correo">
-			</div>
-			<div class="col-12">
-				<input name="txtClave" type="password" class="form-control bg-secondary" id="exampleInputPassword1"
-					placeholder="Ingrese su contraseña">
-				<a href="#" class="">¿Olvidaste tu contraseña?</a>
-			</div>
-			<button type="submit" class="btn btn-dark rounded-pill">Ingresar</button>
+	<div class="container center">
+		<div class="row">
+			<div class="col-md-6 mx-auto">
+				<div class="my-5">
+					<h1>TicketStore</h1>
+				</div>
 
-			<div th:text="${mensaje}" th:class="${cssmensaje}" role="alert"></div>
-		</form>
-		<p>¿No tienes cuenta? <a href="cargarRegUsu">Registrate aquí</a></p>
+				<div class="my-5">
+					<h2>Bienvenidos a<br>TicketStore</h2>
+				</div>
+
+				<form class="row g-3 w-100" action="/login" method="post">
+					<div class="col-12">
+						<input name="txtUsuario" type="email" class="form-control bg-secondary" id="exampleInputEmail1"
+							placeholder="Ingrese su correo">
+					</div>
+					<div class="col-12">
+						<input name="txtClave" type="password" class="form-control bg-secondary"
+							id="exampleInputPassword1" placeholder="Ingrese su contraseña">
+					</div>
+					<button type="submit" class="btn btn-dark rounded-pill">Ingresar</button>
+
+					<div th:text="${mensaje}" th:class="${cssmensaje}" role="alert"></div>
+				</form>
+				<p>¿No tienes cuenta? <a href="cargarRegUsu">Registrate aquí</a></p>
+			</div>
+
+			
+		</div>
 	</div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

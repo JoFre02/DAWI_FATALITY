@@ -1,6 +1,8 @@
 package com.teatro.dawi.controller;
 
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -13,14 +15,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.teatro.dawi.model.Cliente;
 import com.teatro.dawi.model.Evento;
 import com.teatro.dawi.model.Funcion;
+import com.teatro.dawi.model.Ticket;
+import com.teatro.dawi.repository.IAreaRepository;
 import com.teatro.dawi.repository.ICategoriaRepository;
 import com.teatro.dawi.repository.IClienteRepository;
 import com.teatro.dawi.repository.IEventoRepository;
 import com.teatro.dawi.repository.IFuncionRepository;
+import com.teatro.dawi.repository.ITicketRepository;
 
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -48,11 +54,17 @@ public class MenuController {
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
+	@Autowired 
+	private IAreaRepository repoArea;
+	
+	@Autowired 
+	private ITicketRepository repoTicket;
+	
 	@GetMapping("/cargarIndex")
 	public String mostrarIndex(Model model) {
 		model.addAttribute("lstEventos", repoEven.findAll());
 		//No olvidar
-		return "chifles";
+		return "listadoEventos";
 	}
 	
 	@GetMapping("/cargarRegUsu")
@@ -76,6 +88,11 @@ public class MenuController {
 	public String abrirDetalleEvento() {
 		return "detalleEvento";  
 	}
+
+	
+	
+	
+	
 	
 	// listar funciones
 	@GetMapping("/registroFuncion")
@@ -101,7 +118,7 @@ public class MenuController {
 		
 	}
 	
-	@PostMapping("/registrarEvento")
+	/*@PostMapping("/registrarEvento")
 	public String registrarEvento(@ModelAttribute Evento evento, Model model) {
 		model.addAttribute("lstCategorias", repoCat.findAll());
 		try {
@@ -112,7 +129,25 @@ public class MenuController {
 		}
 		
 		return "redirect:/registroFuncion";
-	}
+	}*/
+	
+	@PostMapping("/registrarEvento")
+    public String registrarEvento(@ModelAttribute Evento evento, Model model,
+            @RequestParam("btnOpcion") String opcion,
+            RedirectAttributes atributos) {
+        if(opcion.equals("fil")) {
+            atributos.addAttribute("evento", evento);
+            return "redirect:/reporteCatEvento";
+        }
+        model.addAttribute("lstCategorias", repoCat.findAll());
+        try {
+            repoEven.save(evento);
+            model.addAttribute("mensaje", "REGISTRO OK");
+        } catch (Exception e) {
+            model.addAttribute("mensaje", "ERROR AL REGISTRAR");
+        }
+        return "redirect:/registroFuncion";
+    }
 	
 	@GetMapping("/editar/{idfuncion}")
     public String editar(@PathVariable int idfuncion, Model model) {
@@ -179,17 +214,86 @@ public class MenuController {
 	}
 	
 	@GetMapping("/reporteFuncion")
-	public void reporteFuncion(HttpServletResponse response) {
-		response.setHeader("Content-Disposition", "inline;");
-		response.setContentType("application/pdf");
-		try {
-			String ru = resourceLoader.getResource("classpath:reporteFuncion.jasper").getURI().getPath();
-			JasperPrint jasperPrint = JasperFillManager.fillReport(ru, null, dataSource.getConnection());
-			OutputStream outStream = response.getOutputStream();
-			JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
-		} catch (Exception e) {
-			e.printStackTrace();
+    public void reporteFuncion(HttpServletResponse response) {
+        response.setHeader("Content-Disposition", "inline;");
+        response.setContentType("application/pdf");
+        try {
+            String ru = resourceLoader.getResource("classpath:reporteFuncion.jasper").getURI().getPath();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(ru, null, dataSource.getConnection());
+            OutputStream outStream = response.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping("/reporteCatEvento")
+    public void reporteEvento(HttpServletResponse response,
+            @ModelAttribute Evento evento) {
+        response.setHeader("Content-Disposition", "inline;");
+        response.setContentType("application/pdf");
+        try {
+            HashMap<String, Object> parametros = new HashMap<>();
+            parametros.put("categoria", "1");
+            String ru = resourceLoader.getResource("classpath:reporteCatEvento.jasper").getURI().getPath();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(ru, parametros, dataSource.getConnection());
+            OutputStream outStream = response.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
+	
+	
+	
+	//METODO BUSCAR QUE ENVIARA OBJETO A LA VISTA DETALLEvento
+	
+	@GetMapping ("/detalleEvento/{idevento}")
+	public String detalleEvento(@PathVariable int idevento, Model model) {
+			
+			List<Funcion> funcion = repoFunc.findByIdeventoEquals(idevento);
+			
+	        Evento evento = repoEven.findById(idevento).get();
+
+			model.addAttribute("lstArea", repoArea.findAll());
+			model.addAttribute("lstFunciones", funcion);
+			model.addAttribute("evento", evento);
+			
+			
+			return "detalleEvento";
 		}
+	
+	@GetMapping("/comprarTicket/{idevento}")
+	public String comprarTicket(@PathVariable int idevento, Model model) {
+		
+		model.addAttribute("evento", repoEven.findById(idevento));
+		model.addAttribute("lstFuncion", repoFunc.findByIdeventoEquals(idevento));
+		model.addAttribute("lstArea", repoArea.findAll());
+		model.addAttribute("lstClientes", repoCli.findAll());
+		
+        model.addAttribute("ticket", new Ticket());
+
+		
+		return "ComprarTicket";
 	}
+	
+	@PostMapping("/comprarTicket")
+	public String comprarTicket(@ModelAttribute Ticket ticket, Model model) {
+		
+		try {
+			repoTicket.save(ticket);
+			model.addAttribute("mensaje", "Grabacion OK!");
+			model.addAttribute("cssmensaje", "alert alert-success");
+		} catch (Exception e) {
+			model.addAttribute("mensaje", "Error al grabar");
+			model.addAttribute("cssmensaje", "alert alert-danger");
+		}
+		return "ComprarTicket";
+	}
+	
+	
+	
+	
 
 }

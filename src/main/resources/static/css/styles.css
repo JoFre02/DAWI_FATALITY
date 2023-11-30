@@ -1,14 +1,19 @@
 @charset "ISO-8859-1";
 
+
+
 * {
 	margin: 0;
+	text-decoration: none;
 }
+
 
 .cabecera {
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
 	padding: 20px;
 	background-color: darkgray;
+	text-decoration: none;
 }
 
 #img-logo {
@@ -141,3 +146,18 @@
 	grid-column: 3/5;
 	grid-row: 3/4;
 }
+
+listaProductos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 10px;
+    row-gap: 10px;
+}
+
+.cuadrado {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
+

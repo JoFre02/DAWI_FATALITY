@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Inicio</title>
+	<link rel="stylesheet" href="/css/styles.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+	<header>
+		<div class="cabecera">
+			<div id="img-logo">
+				<h1> <a th:href="@{/cargarIndex}" class="h2" style="text-decoration: none;">TICKETStore</a></h1>
+			</div>
+			<div id="opt-cab">
+				<!--ul>
+					<a th:href="@{/cargarRealizarEvento}">Registrar Evento</a>
+				</ul-->
+			</div>
+			<div id="but-ses">
+				<a th:href="@{/cargarRealizarEvento}" class=" mt-1 h5" style="text-decoration: none; color: white;">Crear Eventos    </a>
+				<a th:href="@{/login}" class="btn btn-dark" style="border-radius: 20px">Iniciar Sesion</a>
+				<a th:href="@{/cargarRegUsu}" class="btn btn-success" style="border-radius: 20px">Registrar</a>
+			</div>
+		</div>
+	</header>
+	<main>
+		<div class="container">
+
+				<h3 class="my-4">Lista de Eventos</h3>
+				<!--table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Evento</th>
+							<th>Descripcion</th>
+							<th>Categoria</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="e : ${lstEventos}">
+							<th scope="row" th:text="${e.idevento}">1</th>
+							<td th:text="${e.nomevento}">xx</td>
+							<td th:text="${e.desevento}">xx</td>
+							<td th:text="${e.objCategoria.nomcat}">xx</td>
+							<td><a th:href="@{/detalleEvento/}+${e.idevento}" class ="btn btn-warning">Ver Evento</a>
+						</tr>
+					</tbody>
+				</table-->
+				
+				
+				
+				<div class="listaProductos row">
+    				<div th:each="e : ${lstEventos}" class="col-md-4 mb-4">
+        <div class="card" >
+            <img th:src="@{'../img/' + ${e.nomevento + '.png'}}" class="card-img-top cuadrado" alt="Imagen no disponible" />
+            <div class="card-body">
+                <h5 class="card-title" th:text="${e.idevento + ' | ' + e.nomevento}"></h5>
+                <a th:href="@{/detalleEvento/} + ${e.idevento}" class="btn btn-warning">Ver Evento</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+				
+				
+				
+			</div>
+	</main>
+	<footer></footer>
+</body>
+</html>
